@@ -25,7 +25,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 public class ToastStrategy extends Handler implements IToastStrategy {
 
     /** 延迟时间 */
-    private static final int DELAY_TIMEOUT = 200;
+    private static final int DELAY_TIMEOUT = 0;
 
     /** 显示吐司 */
     private static final int TYPE_SHOW = 1;

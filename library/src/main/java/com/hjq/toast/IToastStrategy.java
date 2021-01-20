@@ -12,9 +12,9 @@ import android.widget.Toast;
 public interface IToastStrategy {
 
     /** 短吐司显示的时长 */
-    int SHORT_DURATION_TIMEOUT = 2000;
+    int SHORT_DURATION_TIMEOUT = 1000;
     /** 长吐司显示的时长 */
-    int LONG_DURATION_TIMEOUT = 3500;
+    int LONG_DURATION_TIMEOUT = 2000;
 
     /**
      * 创建 Toast
