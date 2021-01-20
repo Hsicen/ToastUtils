@@ -6,18 +6,17 @@ android {
 
     defaultConfig {
         minSdkVersion 4
-        versionCode 88
-        versionName "8.8"
+        versionCode 89
+        versionName "8.9"
     }
 }
 
 publish {
-    userOrg = 'getactivity'
-    groupId = 'com.hjq'
+    userOrg = 'hsicen'
+    groupId = 'com.hsicen'
     artifactId = 'toast'
-    version = '8.8'
+    version = '8.9'
     description = 'This is a very functional Toast'
-    website = "https://github.com/getActivity/ToastUtils"
 }
 
 tasks.withType(Javadoc) {
