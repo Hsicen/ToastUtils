@@ -11,23 +11,31 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 /**
- *    author : Android 轮子哥
- *    github : https://github.com/getActivity/ToastUtils
- *    time   : 2018/11/02
- *    desc   : 自定义 Toast 辅助类
+ * author : Android 轮子哥
+ * github : https://github.com/getActivity/ToastUtils
+ * time   : 2018/11/02
+ * desc   : 自定义 Toast 辅助类
  */
 final class ToastHelper extends Handler {
 
-    /** 当前的吐司对象 */
+    /**
+     * 当前的吐司对象
+     */
     private final Toast mToast;
 
-    /** WindowManager 辅助类 */
+    /**
+     * WindowManager 辅助类
+     */
     private final WindowHelper mWindowHelper;
 
-    /** 当前应用的包名 */
+    /**
+     * 当前应用的包名
+     */
     private final String mPackageName;
 
-    /** 当前是否已经显示 */
+    /**
+     * 当前是否已经显示
+     */
     private boolean mShow;
 
     ToastHelper(Toast toast, Application application) {
@@ -88,8 +96,8 @@ final class ToastHelper extends Handler {
             params.format = PixelFormat.TRANSLUCENT;
             params.windowAnimations = android.R.style.Animation_Toast;
             params.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                    | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                    | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
             params.packageName = mPackageName;
             // 重新初始化位置
             params.gravity = mToast.getGravity();
@@ -108,7 +116,7 @@ final class ToastHelper extends Handler {
                 }
                 // 添加一个移除吐司的任务
                 sendEmptyMessageDelayed(hashCode(), mToast.getDuration() == Toast.LENGTH_LONG ?
-                        IToastStrategy.LONG_DURATION_TIMEOUT : IToastStrategy.SHORT_DURATION_TIMEOUT);
+                    IToastStrategy.LONG_DURATION_TIMEOUT : IToastStrategy.SHORT_DURATION_TIMEOUT);
                 // 当前已经显示
                 setShow(true);
             } catch (IllegalStateException | WindowManager.BadTokenException ignored) {
@@ -134,7 +142,7 @@ final class ToastHelper extends Handler {
                     if (windowManager != null) {
                         windowManager.removeViewImmediate(mToast.getView());
                     }
-                 }
+                }
             } catch (IllegalArgumentException ignored) {
                 // 如果当前 WindowManager 没有附加这个 View 则会抛出异常
                 // java.lang.IllegalArgumentException: View=android.widget.TextView not attached to window manager

@@ -17,33 +17,44 @@ import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**
- *    author : Android 轮子哥
- *    github : https://github.com/getActivity/ToastUtils
- *    time   : 2018/11/12
- *    desc   : Toast 默认处理器
+ * author : Android 轮子哥
+ * github : https://github.com/getActivity/ToastUtils
+ * time   : 2018/11/12
+ * desc   : Toast 默认处理器
  */
 public class ToastStrategy extends Handler implements IToastStrategy {
 
-    /** 延迟时间 */
-    private static final int DELAY_TIMEOUT = 0;
-
-    /** 显示吐司 */
+    /**
+     * 显示吐司
+     */
     private static final int TYPE_SHOW = 1;
-    /** 继续显示 */
+    /**
+     * 继续显示
+     */
     private static final int TYPE_CONTINUE = 2;
-    /** 取消显示 */
+    /**
+     * 取消显示
+     */
     private static final int TYPE_CANCEL = 3;
 
-    /** 队列最大容量 */
+    /**
+     * 队列最大容量
+     */
     private static final int MAX_TOAST_CAPACITY = 3;
 
-    /** 吐司队列 */
+    /**
+     * 吐司队列
+     */
     private volatile Queue<CharSequence> mQueue;
 
-    /** 当前是否正在执行显示操作 */
+    /**
+     * 当前是否正在执行显示操作
+     */
     private volatile boolean mShow;
 
-    /** 吐司对象 */
+    /**
+     * 吐司对象
+     */
     private Toast mToast;
 
     public ToastStrategy() {
@@ -64,12 +75,12 @@ public class ToastStrategy extends Handler implements IToastStrategy {
             toast = new SafeToast(application);
         } else {
             boolean check =
-                    // 对比不同版本的 NMS 的源码发现这个问题在 Android 9.0 已经被谷歌修复了
-                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ||
-                            // 判断当前应用是否有通知栏权限，如果关闭会导致弹 Toast 无法显示
-                            areNotificationsEnabled(application) ||
-                            // 判断当前是否是小米手机，因为只有小米手机做了特殊处理，就算没有通知栏权限也能弹吐司
-                            "xiaomi".equals(Build.MANUFACTURER.toLowerCase());
+                // 对比不同版本的 NMS 的源码发现这个问题在 Android 9.0 已经被谷歌修复了
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ||
+                    // 判断当前应用是否有通知栏权限，如果关闭会导致弹 Toast 无法显示
+                    areNotificationsEnabled(application) ||
+                    // 判断当前是否是小米手机，因为只有小米手机做了特殊处理，就算没有通知栏权限也能弹吐司
+                    "xiaomi".equals(Build.MANUFACTURER.toLowerCase());
             if (check) {
                 // 检查通过，返回正常类型的 Toast 即可
                 toast = new NormalToast(application);
@@ -102,7 +113,7 @@ public class ToastStrategy extends Handler implements IToastStrategy {
             // 延迟一段时间之后再执行，因为在没有通知栏权限的情况下，Toast 只能显示当前 Activity
             // 如果当前 Activity 在 ToastUtils.show 之后进行 finish 了，那么这个时候 Toast 可能会显示不出来
             // 因为 Toast 会显示在销毁 Activity 界面上，而不会显示在新跳转的 Activity 上面
-            sendEmptyMessageDelayed(TYPE_SHOW, DELAY_TIMEOUT);
+            sendEmptyMessage(TYPE_SHOW);
         }
     }
 
@@ -125,7 +136,7 @@ public class ToastStrategy extends Handler implements IToastStrategy {
                     mToast.show();
                     // 等这个 Toast 显示完后再继续显示，要加上一些延迟
                     // 不然在某些手机上 Toast 可能会来不及消失就要进行显示，这样是显示不出来的
-                    sendEmptyMessageDelayed(TYPE_CONTINUE, getToastDuration(text) + DELAY_TIMEOUT);
+                    sendEmptyMessage(TYPE_CONTINUE);
                 } else {
                     mShow = false;
                 }
@@ -157,16 +168,8 @@ public class ToastStrategy extends Handler implements IToastStrategy {
     }
 
     /**
-     * 根据文本来获取吐司的显示时长
-     */
-    public int getToastDuration (CharSequence text) {
-        // 如果显示的文字超过了 20 个字符就显示长吐司，否则显示短吐司
-        return text.length() > 20 ? LONG_DURATION_TIMEOUT : SHORT_DURATION_TIMEOUT;
-    }
-
-    /**
      * 检查通知栏权限有没有开启
-     *
+     * <p>
      * 参考 SupportCompat 包中的方法： NotificationManagerCompat.from(context).areNotificationsEnabled();
      */
     private static boolean areNotificationsEnabled(Context context) {
